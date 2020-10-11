@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Calculator</title>
+
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
+        <script src="https://kit.fontawesome.com/537f2d83ee.js" crossorigin="anonymous"></script>
+        <script>
+            class Calculator {
+                isFloat = false;
+                hasOP = false;
+                operator = '';
+                inputNum = '0';
+                number1;
+                number2;
+
+                // 단순한 출력함수. 출력 가능한 길이를 제한했다.
+                displayResult(num) {
+                    if(num.toString().length >= 11) {
+                        num = num.toExponential(3);
+                    }
+
+                    document.getElementById("display").innerHTML = num;
+                }
+
+                setNumber() {
+                    if(this.number1){
+                        this.number2 = Number(this.inputNum);
+                        this.calculate();
+                    } else {
+                        this.number1 = Number(this.inputNum);
+                    }
+
+                    this.inputNum = '0';
+                    this.isFloat = false;
+                }
+
+                getNumber(num) {
+                    if(this.inputNum.length == 11) return false;
+                    this.inputNum += num;
+                
+                    if(this.inputNum.charAt(0) == '0' 
+                    && this.inputNum.charAt(1) != '.') {
+                        this.inputNum = this.inputNum.substring(1);
+                    }
+                    this.displayResult(this.inputNum);
+                }
+
+                getOperator(op) {
+                    if(this.hasOP) {
+                        this.setNumber();
+                    } else {
+                        this.setNumber();
+                        this.hasOP = true;
+                    }
+                    this.inputNum = '0';
+                    this.operator = op;
+                    this.statusBar += this.operator;
+                }
+
+                getEqual() {
+                    if(!this.number2 || this.number1){
+                        this.number2 = Number(this.inputNum);
+                    }
+
+                    console.log(this.number1,this.number2);
+                    this.calculate();
+                    this.inputNum = '0';
+                }
+
+                calculate() {
+                    switch(this.operator) {
+                        case '%' :
+                            this.number1 %= this.number2;
+                        case '/' :
+                            this.number1 /= this.number2;
+                            if(this.number1 == Infinity) this.number1 = 0;
+                            break;
+                        case 'x' :
+                            this.number1 *= this.number2;
+                            break;
+                        case '-' :
+                            this.number1 -= this.number2;
+                            break;
+                        case '+' :
+                            this.number1 += this.number2;
+                    }
+                    this.displayResult(this.number1);
+                }
+
+                mouseClear(event) {
+                    if(event.button == 2){   
+                        this.inputNum = this.inputNum.slice(0,this.inputNum.length -1);
+                        if(this.inputNum.length < 1) this.inputNum = '0';
+                        this.displayResult(this.inputNum);
+                    }
+                }
+
+                clear() {
+                    this.inputNum = this.inputNum.slice(0, this.inputNum.length -1);
+                    if(this.inputNum.length < 1) this.inputNum = '0';
+                    this.displayResult(this.inputNum);
+                }
+
+                clearAll() {    
+                    this.hasOP = this.isFloat = false;
+                    this.operator = '';
+                    this.inputNum = '0';
+                    this.number1 = this.number2 = 0;
+                    this.displayResult(0);
+                }   
+
+                checkDecimalPoint() {
+                    if(!this.isFloat) {
+                        this.isFloat = true;
+                        this.getNumber('.');
+                    } 
+                }
+            }
+
+            let calculator = new Calculator();
+        </script>
+        <style>
+            div, button, h3, p{
+                padding: 0;
+                margin: 0;
+                font-family: 'Montserrat', sans-serif;
+            }
+            #cal_cont {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                width: 100%;
+                height: 100%;
+            }
+            
+            #cal_body {
+                border: 1px solid black;
+                background: black;
+                width: 300px;
+                height: 470px;
+                border-radius: 10px;
+            }
+            
+            #displayArea {
+                text-align: right;
+                background-color: black;
+                color: white;
+                border-radius: 10px;
+                height: 120px;
+            }
+
+            #icon {
+                padding: 5px;
+                font-size: 12px;
+                display: flex;
+                flex-direction: row;
+                justify-content:space-between;
+                height: 20px;
+            }
+
+            #display {
+                font-size: 45px;
+                padding-top: 30px;
+                padding-right: 13px;
+            }
+            
+            #inputArea {
+                height: 300px;
+            }
+            
+            .buttonRow {
+                width:100%;
+                height: 20%;
+                display: flex;
+                flex-direction: row;
+                margin-bottom: 8px;
+            }
+
+            .buttonRow > button {
+                width: 100%;
+                height: 100%;
+                color: white;
+                background-color: #333333;
+                font-size: 30px;
+                border-radius: 100%;
+                border: none;
+                margin: 7px;
+            }
+
+            .buttonRow > #zero {
+                width: 230%;
+                border-radius: 50px;
+            }
+
+            button:focus {
+                outline: none;
+            }
+
+            button:hover {
+                cursor: pointer;
+                background-color: #525252;
+            }
+
+            .buttonRow > .lg_btn{
+                color: black;
+                background-color: #A5A5A5;
+            }
+
+            .lg_btn:hover {
+                background-color: #c9c7c7;
+            }
+            
+            .buttonRow > .operator {
+                background-color: #FE9E09;
+            }
+
+            .operator:hover {
+                background-color: #fdba56;
+            }
+        </style>
+    </head>
+    <body oncontextmenu="return false">
+        <div id="cal_cont">
+            <div id="cal_body">
+                <div id="displayArea">
+                    <div id="icon">
+                        <div id="left">
+                            <i class="fas fa-signal"></i>
+                            JK&nbsp; &nbsp; LTE
+                        </div>
+                        <i class="fas fa-lock"></i>
+                        <div id="right">
+                            <i class="fas fa-moon"></i>
+                            &nbsp;79%&nbsp;
+                            <i class="fas fa-battery-three-quarters"></i>
+                        </div>
+                    </div>
+                    <h3 id="display" onmousedown="calculator.mouseClear(event)">0</h3>
+                </div>
+                <div id="inputArea">
+                    <div class="buttonRow">
+                        <button class="lg_btn" onclick="calculator.clearAll()">AC</button>
+                        <button class="lg_btn" onclick="calculator.clear()">Del</button>
+                        <button class="lg_btn" onclick="calculator.getOperator('%')" style="font-size: 25px;"><b>%</b></button>
+                        <button class="operator" onclick="calculator.getOperator('/')">÷</button>                            
+                    </div>
+                    <div class="buttonRow">
+                        <button onclick="calculator.getNumber('7')">7</button>
+                        <button onclick="calculator.getNumber('8')">8</button>
+                        <button onclick="calculator.getNumber('9')">9</button>
+                        <button class="operator" onclick="calculator.getOperator('x')">×</button>
+                    </div>
+                    <div class="buttonRow">
+                        <button onclick="calculator.getNumber('4')">4</button>
+                        <button onclick="calculator.getNumber('5')">5</button>
+                        <button onclick="calculator.getNumber('6')">6</button>
+                        <button class="operator" onclick="calculator.getOperator('-')">─</button>
+                    </div>
+                    <div class="buttonRow">
+                        <button onclick="calculator.getNumber('1')">1</button>
+                        <button onclick="calculator.getNumber('2')">2</button>
+                        <button onclick="calculator.getNumber('3')">3</button>
+                        <button class="operator" onclick="calculator.getOperator('+')">+</button>
+                    </div>
+                    <div class="buttonRow">
+                        <button id="zero" onclick="calculator.getNumber('0')">0</button>
+                        <button onclick="calculator.checkDecimalPoint()">.</button>
+                        <button class="operator" onclick="calculator.getEqual()">=</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

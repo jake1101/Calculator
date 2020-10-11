@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <script src="./node_modules/jquery/dist/jquery.min.js"></script>
+    <style>
+        div, button, input {
+            margin: 0;
+            padding: 0;
+        }
+
+        #cal_cont {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            }
+
+        #cal_body {
+            border: 1px solid red;
+            border-radius: 10px;
+            width: 400px;
+            padding: 30px;
+        }
+
+        #cal_body > div {
+            border: 3px solid white;
+        }
+
+        #cal_output {
+            width: 100%;
+            height: 150px;
+        }
+
+        #cal_output > input {
+            width: 100%;
+            text-align: right;
+            background-color: black;
+            color: white;
+        }
+
+        #display {
+            border: 0;
+            height: 40%;
+            font-size: 30px;
+        }
+
+        #result {
+            border: 0;
+            border-top: 1px solid white;
+            height: 60%;
+            font-size: 50px;
+        }
+
+        #cal_button {
+            width: 100%;
+            height: 500px;
+        }
+        
+        .buttons {
+            width: 100%;
+            height: 20%;
+            display: flex;
+            flex-direction: row;
+        }
+
+        .buttons button {
+            border: 5px solid;
+            width: 100px;
+            height: 100px;
+            background-color: rgb(37, 36, 36);
+            border-radius: 100%;
+            color: white;
+            font-size: 50px;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="cal_cont">
+        <div id="cal_body">
+            <div>
+                <div id="cal_output">
+                    <input id="display" type="text"/>
+                    <input id="result" type="text"/>
+                </div>
+            </div>
+            <div>
+            <div id="cal_button">
+                <div class="buttons">
+                    <button onclick="getInput('n')">C</button>
+                    <button onclick="getInput('/')">/</button>
+                    <button onclick="getInput('*')">X</button>
+                    <button onclick="getInput('-')">─</button>
+                </div>
+                <div class="buttons">
+                    <button onclick="getInput(7)">7</button>
+                    <button onclick="getInput(8)">8</button>
+                    <button onclick="getInput(9)">9</button>
+                    <button onclick="getInput('+')" style="height: 200%; border-radius: 200px;">+</button>
+                </div>
+                <div class="buttons" style="width: 75%;">
+                    <button onclick="getInput(4)">4</button>
+                    <button onclick="getInput(5)">5</button>
+                    <button onclick="getInput(6)">6</button>
+                </div>
+                <div class="buttons">
+                    <button onclick="getInput(1)">1</button>
+                    <button onclick="getInput(2)">2</button>
+                    <button onclick="getInput(3)">3</button>
+                    <button onclick="getInput('=')" style="height: 200%; border-radius: 200px;">=</button>
+                </div>
+                <div class="buttons" style="width: 75%;">
+                    <button onclick="getInput(0)" style="width: 200px; border-radius: 50px;">0</button>
+                    <button onclick="getInput('.')">.</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var zero = '0';
+        var showNum = "";
+        var showAll = "";
+        var dotCnt = 0;
+        var opCnt = 0;
+        var input = '';
+        var dumyOp = ['+','-','*','/']
+
+        var operateArea = document.getElementById("display");
+        var resultArea = document.getElementById("result");
+
+        resultArea.value = zero;
+
+        function getInput(val) {
+            if(typeof(val) == "number" || val == '.'){
+                showNumber(val);
+            } else if(val in dumyOp) {
+                showOperator(val);
+            }
+        }
+
+        function showNumber(val) {
+            showNum += val;
+            if(val == '0') {
+                
+            }
+            resultArea.value = showNum;
+        }
+
+        function showOperator(val) {
+
+        }
+
+        function operator(op) {
+            opCnt++;
+            if(opCnt>1) {
+                showAll = showAll.slice(0,-1) + op;
+            } else {
+                showAll += showNum + op;
+            }
+
+            operateArea.value = showAll;
+        }
+    </script>
+</body>
+</html>

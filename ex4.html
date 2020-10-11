@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <script src="./node_modules/jquery/dist/jquery.min.js"></script>
+    <style>
+* {margin:0px; padding:0px;}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.calculator {
+    background: rgb(78, 175, 126);
+    border-radius: 10px;
+    width: 220px;
+    padding: 30px;
+    /* color:white; */
+}
+
+.resultArea {
+    border-collapse:collapse;
+    height: 5rem; width:100%;
+    text-align: right;
+    margin-bottom: 5px;
+    color:white;
+    font-size: 25px;
+    background: transparent;
+}
+
+.inputArea {
+    border-collapse: collapse;
+    width:100%; height:16rem;
+    background: orange;
+    /* padding:10px; */
+}
+
+button {
+    width: 50px; height: 50px;
+    background-color: rgb(37, 36, 36);
+    border-radius: 100%;
+    border:none;
+    color: white;
+    font-size: 30px;
+    text-align: center;
+    /* margin:5px 10px; */
+}
+
+.buttonRow {
+    width:100%; height:20%;
+    display:flex;
+    flex-direction: row; 
+}
+    </style>
+    <script>
+        class Calculator {
+    
+            isFloat = false; //소수점 다중입력 방지하기 위해
+            hasOP = false; //오퍼레이터 입력과 변경을 구분하기 위해
+            statusBar = ''; //입력 과정을 출력할 변수
+            result = ''; //
+            operator = '';
+            number1 = '0';
+            number2 = '0';
+    
+            showResult(val) {
+                document.getElementById("result").innerHTML = val;
+            }
+    
+            showNum() {
+                document.getElementById("result").innerHTML = this.result; 
+            }
+    
+            setNumber(num){
+                if(num.charAt(0) == '0' && num.charAt(1) != '.') {
+                    num = num.substring(1);
+                }
+    
+                this.result = num;
+                this.showNum();
+            }
+    
+            getInputNum(num) {
+                if(!this.hasOP) {
+                    this.number1 += num;
+                    this.setNumber(this.number1);
+                } else {
+                    this.number2 += num;
+                    this.setNumber(this.number2);
+                }
+            }
+    
+            getInputOP(op) {
+                //여기에서 두번째 op가 들어오면 getResult를 호출하게 하면
+                this.isFloat = false;
+                if(this.hasOP) {
+                    this.getResult();
+                } else {
+                    this.hasOP = true;
+                }
+                
+                this.operator = op;
+                        //두번째 op부터 계속 true로 해놓고
+                    // getResult로 기존 op 보내고
+                    //새로 op에 저장하고 
+                    //=누를 때만 flag 변경하면 어떨까
+            }
+        
+            getResult() {
+    
+                switch(this.operator) {
+                    case '/' :
+                        if(this.number2 == '0') throw new Error("divide by zero error encountered");
+                        this.number2 /= this.number1;
+                        this.result = this.number2;            
+                        this.number2 = '';
+                        
+                        //this.result = this.number1 / this.number2;
+                
+                        break;
+                    case 'x' :
+                        this.result = Number(this.number1) * Number(this.number2);
+                        this.showResult(this.result);
+                        this.number1 = this.result;
+                        break;
+                    case '-' :
+                        this.result = Number(this.number1) - Number(this.number2);
+                        this.showResult(this.result);
+                        this.number1 = this.result;
+                        break;
+                    case '+' :
+                        this.result = Number(this.number1) + Number(this.number2);
+                        this.showResult(this.result);
+                        this.number1 = this.result;
+                        break;
+                }
+                    //여기에 결과를 보내게 하고
+            }
+        
+            clear() {
+        
+            }
+        
+            checkDecimalPoint() {
+                if(!this.isFloat) {               //소수점이 없으면 flag 변경 후
+                    this.isFloat = true;          //입력중인 숫자에 . 추가
+                    this.getInputNum('.');
+                } 
+            }
+        }
+        
+        let calculator = new Calculator();
+    </script>
+</head>
+<body>
+    <div class="calculator">
+        <div class="resultArea">
+            <div>
+                <p id="statusBar"></p>
+            </div> 
+            <div>
+                <h1 id="result">0</h1>
+            </div>
+        </div>
+        <div class="inputArea">
+            <div class="buttonRow">
+                <button onclick="calculator.clear()">c</button>
+                <button onclick="calculator.getInputOP('/')">/</button>
+                <button onclick="calculator.getInputOP('x')">x</button>
+                <button onclick="calculator.getInputOP('-')">-</button>
+            </div>
+            <div class="buttonRow">
+                <button onclick="calculator.getInputNum('7')">7</button>
+                <button onclick="calculator.getInputNum('8')">8</button>
+                <button onclick="calculator.getInputNum('9')">9</button>
+                <button onclick="calculator.getInputOP('+')" style="height: 200%; border-radius: 200px;">+</button>
+            </div>
+            <div class="buttonRow">
+                <button onclick="calculator.getInputNum('4')">4</button>
+                <button onclick="calculator.getInputNum('5')">5</button>
+                <button onclick="calculator.getInputNum('6')">6</button>
+            </div>
+            <div class="buttonRow">
+                <button onclick="calculator.getInputNum('1')">1</button>
+                <button onclick="calculator.getInputNum('2')">2</button>
+                <button onclick="calculator.getInputNum('3')">3</button>
+                <button onclick="calculator.getResult()" style="height: 200%; border-radius: 200px;">=</button>
+            </div>
+            <div class="buttonRow">
+                <button onclick="calculator.getInputNum('0')" style="width:100px; border-radius: 50px;">0</button>
+                <button onclick="calculator.checkDecimalPoint()">.</button>
+            </div>
+        </div>
+    </div>
+
+    
+</body>
+</html>
+
+
+result += num1 x num2
+num1 = num1 / num2

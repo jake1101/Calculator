@@ -1,3 +1,34 @@
+Skip to content
+Search or jump to…
+
+Pull requests
+Issues
+Marketplace
+Explore
+ 
+@jake1101 
+jake1101
+/
+Calculator
+1
+00
+Code
+Issues
+Pull requests
+Actions
+Projects
+Wiki
+Security
+Insights
+Settings
+Calculator/index.html
+@jake1101
+jake1101 final version
+Latest commit 22e0935 17 hours ago
+ History
+ 1 contributor
+276 lines (246 sloc)  9.71 KB
+  
 <!DOCTYPE html>
 <html>
     <head>
@@ -10,12 +41,12 @@
             class Calculator {
                 isFloat = false;
                 hasOP = false;
-                flag = false;
                 operator = '';
                 inputNum = '0';
                 number1;
                 number2;
 
+                // 단순한 출력함수. 출력 가능한 길이를 제한했다.
                 displayResult(num) {
                     if(num.toString().length >= 11) {
                         num = num.toExponential(3);
@@ -25,7 +56,7 @@
                 }
 
                 setNumber() {
-                    if(this.number1 || this.number1 == 0){
+                    if(this.number1){
                         this.number2 = Number(this.inputNum);
                         this.calculate();
                     } else {
@@ -37,11 +68,6 @@
                 }
 
                 getNumber(num) {
-                    if(this.flag) {
-                        this.clearAll();
-                        this.flag = false;
-                    }
-
                     if(this.inputNum.length == 11) return false;
                     this.inputNum += num;
                 
@@ -59,8 +85,9 @@
                         this.setNumber();
                         this.hasOP = true;
                     }
-                    this.operator = op;
                     this.inputNum = '0';
+                    this.operator = op;
+                    this.statusBar += this.operator;
                 }
 
                 getEqual() {
@@ -68,12 +95,12 @@
                         this.number2 = Number(this.inputNum);
                     }
 
+                    console.log(this.number1,this.number2);
                     this.calculate();
-                    this.flag = true;
+                    this.inputNum = '0';
                 }
 
                 calculate() {
-                    console.log(this.number1, this.number2);
                     switch(this.operator) {
                         case '%' :
                             this.number1 %= this.number2;
@@ -108,10 +135,10 @@
                 }
 
                 clearAll() {    
-                    this.hasOP = this.isFloat = this.flag = false;
+                    this.hasOP = this.isFloat = false;
                     this.operator = '';
                     this.inputNum = '0';
-                    this.number1 = this.number2 = null;
+                    this.number1 = this.number2 = 0;
                     this.displayResult(0);
                 }   
 
@@ -202,7 +229,7 @@
                 outline: none;
             }
 
-            button:active {
+            button:hover {
                 cursor: pointer;
                 background-color: #525252;
             }
@@ -212,7 +239,7 @@
                 background-color: #A5A5A5;
             }
 
-            .lg_btn:active {
+            .lg_btn:hover {
                 background-color: #c9c7c7;
             }
             
@@ -220,7 +247,7 @@
                 background-color: #FE9E09;
             }
 
-            .operator:active {
+            .operator:hover {
                 background-color: #fdba56;
             }
         </style>

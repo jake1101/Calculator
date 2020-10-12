@@ -9,7 +9,7 @@
         <script>
             class Calculator {
                 isFloat = false;
-                hasOP = false;
+                hasOp = false;
                 flag = false;
                 operator = '';
                 inputNum = '0';
@@ -57,11 +57,11 @@
 
                 // 연산자 입력 메소드
                 getOperator(op) {
-                    if(this.hasOP) {
+                    if(this.hasOp) {
                         this.setNumber();
                     } else {
                         this.setNumber();
-                        this.hasOP = true;
+                        this.hasOp = true;
                     }
                     this.operator = op;
                     this.inputNum = '0';
@@ -84,8 +84,10 @@
                         case '%' :
                             this.number1 %= this.number2;
                         case '/' :
+                            if(this.number2 == 0) {
+                                throw this.displayResult("Infinity");
+                            }
                             this.number1 /= this.number2;
-                            if(this.number1 == Infinity) this.number1 = 0;
                             break;
                         case 'x' :
                             this.number1 *= this.number2;
@@ -108,13 +110,19 @@
                 }
 
                 clear() {
-                    this.inputNum = this.inputNum.slice(0, this.inputNum.length -1);
-                    if(this.inputNum.length < 1) this.inputNum = '0';
-                    this.displayResult(this.inputNum);
+                    if(this.flag) {
+                        this.number1 = this.number1.toString().slice(0, this.number1.toString().length -1);
+                        if(this.number1.length < 1) this.number1 = '0';
+                        this.displayResult(this.number1);
+                    }else{
+                        this.inputNum = this.inputNum.slice(0, this.inputNum.length -1);
+                        if(this.inputNum.length < 1) this.inputNum = '0';                    
+                        else this.displayResult(this.inputNum);
+                    }
                 }
 
                 clearAll() {    
-                    this.hasOP = this.isFloat = this.flag = false;
+                    this.hasOp = this.isFloat = this.flag = false;
                     this.operator = '';
                     this.inputNum = '0';
                     this.number1 = this.number2 = null;

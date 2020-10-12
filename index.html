@@ -16,6 +16,7 @@
                 number1;
                 number2;
 
+                // 출력 메소드
                 displayResult(num) {
                     if(num.toString().length >= 11) {
                         num = num.toExponential(3);
@@ -24,6 +25,7 @@
                     document.getElementById("display").innerHTML = num;
                 }
 
+                // 수의 저장공간 할당 메소드
                 setNumber() {
                     if(this.number1 || this.number1 == 0){
                         this.number2 = Number(this.inputNum);
@@ -36,6 +38,7 @@
                     this.isFloat = false;
                 }
 
+                // 수 입력 메소드
                 getNumber(num) {
                     if(this.flag) {
                         this.clearAll();
@@ -52,6 +55,7 @@
                     this.displayResult(this.inputNum);
                 }
 
+                // 연산자 입력 메소드
                 getOperator(op) {
                     if(this.hasOP) {
                         this.setNumber();
@@ -63,6 +67,7 @@
                     this.inputNum = '0';
                 }
 
+                // '=' 입력 메소드
                 getEqual() {
                     if(!this.number2 || this.number1){
                         this.number2 = Number(this.inputNum);
@@ -72,6 +77,7 @@
                     this.flag = true;
                 }
 
+                // 연산 메소드
                 calculate() {
                     console.log(this.number1, this.number2);
                     switch(this.operator) {

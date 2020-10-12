@@ -9,7 +9,6 @@
         <script>
             class Calculator {
                 isFloat = false;
-                hasOp = false;
                 flag = false;
                 operator = '';
                 inputNum = '0';
@@ -57,14 +56,15 @@
 
                 // 연산자 입력 메소드
                 getOperator(op) {
-                    if(this.hasOp) {
+                    if(!this.flag){
                         this.setNumber();
-                    } else {
-                        this.setNumber();
-                        this.hasOp = true;
+                        this.inputNum = '0';
+                    }else{
+                        this.inputNum = '0';
+                        this.number2 = Number(this.inputNum);
+                        this.flag = false;
                     }
                     this.operator = op;
-                    this.inputNum = '0';
                 }
 
                 // '=' 입력 메소드
@@ -79,7 +79,6 @@
 
                 // 연산 메소드
                 calculate() {
-                    console.log(this.number1, this.number2);
                     switch(this.operator) {
                         case '%' :
                             this.number1 %= this.number2;
@@ -122,7 +121,7 @@
                 }
 
                 clearAll() {    
-                    this.hasOp = this.isFloat = this.flag = false;
+                    this.isFloat = this.flag = false;
                     this.operator = '';
                     this.inputNum = '0';
                     this.number1 = this.number2 = null;

@@ -9,7 +9,8 @@
         <script>
             class Calculator {
                 isFloat = false;
-                flag = false;
+                nextIsNum = false;
+                isEqual = false;
                 operator = '';
                 inputNum = '0';
                 number1;
@@ -25,27 +26,11 @@
                     document.getElementById("display").innerHTML = num;
                 }
 
-                // 수의 저장공간 할당 메소드
-                setNumber() {
-                    if(this.number1 || this.number1 == 0){
-                        if(this.operator == 'x' || this.operator == '/' || this.operator == '%') {
-                            this.inputNum = '1';
-                        }
-                        this.number2 = Number(this.inputNum);
-                        this.calculate();
-                    } else {
-                        this.number1 = Number(this.inputNum);
-                    }
-
-                    this.inputNum = '0';
-                    this.isFloat = false;
-                }
-
                 // 수 입력 메소드
                 getNumber(num) {
-                    if(this.flag) {
+                    if(this.nextIsNum) {
                         this.clearAll();
-                        this.flag = false;
+                        this.nextIsNum = false;
                     }
 
                     if(this.inputNum.length == 11) return false;
@@ -57,28 +42,51 @@
                     }
                     this.displayResult(this.inputNum);
                 }
+                
+                // 수의 저장공간 할당 메소드
+                setNumber() {
+                    if(this.number1 || this.number1 == 0){
+                        if(this.operator == 'x' || this.operator == '/' || this.operator == '%') {
+                            if(!this.isEqual){
+                                this.inputNum = '1';
+                                this.isEqual = true;
+                            }
+                        }
+                        this.number2 = Number(this.inputNum);
+                        if(!this.isEqual) this.calculate();
+                    } else {
+                        this.number1 = Number(this.inputNum);
+                        this.inputNum = '0';
+                    }
+
+                    console.log("set1: "+this.number1, this.number2)
+                    this.isFloat = false;
+                    this.isEqual = true;
+                }
 
                 // 연산자 입력 메소드
                 getOperator(op) {
                     this.operator = op;
-                    if(!this.flag){
+                    if(!this.nextIsNum){
+                        this.isEqual = false;
                         this.setNumber();
                         this.inputNum = '0';
                     }else{
                         this.inputNum = '0';
-                        this.number2 = Number(this.inputNum);
-                        this.flag = false;
+                        this.isEqual = false;
+                        this.setNumber();
+                        this.nextIsNum = false;
                     }
                 }
 
                 // '=' 입력 메소드
                 getEqual() {
                     if(!this.number2 || this.number1){
-                        this.number2 = Number(this.inputNum);
+                        this.setNumber();
                     }
 
-                    this.calculate();
-                    this.flag = true;
+                    if(this.isEqual) this.calculate();
+                    this.nextIsNum = true;
                 }
 
                 // 연산 메소드
@@ -113,7 +121,7 @@
                 }
 
                 clear() {
-                    if(this.flag) {
+                    if(this.nextIsNum) {
                         this.number1 = this.number1.toString().slice(0, this.number1.toString().length -1);
                         if(this.number1.length < 1) this.number1 = '0';
                         this.displayResult(this.number1);
@@ -125,7 +133,7 @@
                 }
 
                 clearAll() {    
-                    this.isFloat = this.flag = false;
+                    this.isFloat = this.nextIsNum = false;
                     this.operator = '';
                     this.inputNum = '0';
                     this.number1 = this.number2 = null;

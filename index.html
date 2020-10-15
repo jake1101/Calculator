@@ -10,7 +10,6 @@
             class Calculator {
                 isFloat = false;
                 hasOp = false;
-                isEqual = false;
                 doubleOp = false;
                 remover = false;
                 operator = '';
@@ -56,7 +55,6 @@
                 // 연산자 입력 메소드
                 getOperator(op) {
                     this.inputNum = '0';
-                    this.isEqual = false;
                     this.hasOp = true;
                     if(this.number2 && !this.doubleOp) this.calculate();
                     this.operator = op;
@@ -117,7 +115,7 @@
                 }
 
                 clearAll() {    
-                    this.isFloat = this.hasOp = this.isEqual = this.doubleOp = this.remover = false;
+                    this.isFloat = this.hasOp = this.doubleOp = this.remover = false;
                     this.operator = '';
                     this.inputNum = '0';
                     this.number1 = this.number2 = null;

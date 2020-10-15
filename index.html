@@ -9,7 +9,7 @@
         <script>
             class Calculator {
                 isFloat = false;
-                isNum2 = false;
+                hasOp = false;
                 isEqual = false;
                 doubleOp = false;
                 remover = false;
@@ -42,7 +42,7 @@
                 
                 // 수의 저장공간 할당 메소드
                 setNumber() {
-                    if(this.isNum2) {
+                    if(this.hasOp) {
                         this.number2 = Number(this.inputNum);
                         this.doubleOp = false;
                         this.remover = true;
@@ -57,7 +57,7 @@
                 getOperator(op) {
                     this.inputNum = '0';
                     this.isEqual = false;
-                    this.isNum2 = true;
+                    this.hasOp = true;
                     if(this.number2 && !this.doubleOp) this.calculate();
                     this.operator = op;
                     this.doubleOp = true;
@@ -67,7 +67,7 @@
                 getEqual() {
                     this.calculate();
                     this.doubleOp = true;
-                    this.isNum2 = false;
+                    this.hasOp = false;
                     this.remover = false;
                 }
 
@@ -117,7 +117,7 @@
                 }
 
                 clearAll() {    
-                    this.isFloat = this.isNum2 = this.isEqual = this.doubleOp = this.remover = false;
+                    this.isFloat = this.hasOp = this.isEqual = this.doubleOp = this.remover = false;
                     this.operator = '';
                     this.inputNum = '0';
                     this.number1 = this.number2 = null;

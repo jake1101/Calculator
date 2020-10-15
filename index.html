@@ -9,8 +9,10 @@
         <script>
             class Calculator {
                 isFloat = false;
-                nextIsNum = false;
+                isNum2 = false;
                 isEqual = false;
+                doubleOp = false;
+                remover = false;
                 operator = '';
                 inputNum = '0';
                 number1;
@@ -22,17 +24,11 @@
                         if(num.toString().charAt(1) != '.') num = num.toExponential(3);
                         else num = num.toString().slice(0,11);
                     }
-
                     document.getElementById("display").innerHTML = num;
                 }
 
                 // 수 입력 메소드
                 getNumber(num) {
-                    if(this.nextIsNum) {
-                        this.clearAll();
-                        this.nextIsNum = false;
-                    }
-
                     if(this.inputNum.length == 11) return false;
                     this.inputNum += num;
                 
@@ -41,52 +37,38 @@
                         this.inputNum = this.inputNum.substring(1);
                     }
                     this.displayResult(this.inputNum);
+                    this.setNumber();
                 }
                 
                 // 수의 저장공간 할당 메소드
                 setNumber() {
-                    if(this.number1 || this.number1 == 0){
-                        if(this.operator == 'x' || this.operator == '/' || this.operator == '%') {
-                            if(!this.isEqual){
-                                this.inputNum = '1';
-                                this.isEqual = true;
-                            }
-                        }
+                    if(this.isNum2) {
                         this.number2 = Number(this.inputNum);
-                        if(!this.isEqual) this.calculate();
+                        this.doubleOp = false;
+                        this.remover = true;
                     } else {
                         this.number1 = Number(this.inputNum);
-                        this.inputNum = '0';
+                        this.remover = false;
                     }
-
-                    console.log("set1: "+this.number1, this.number2)
                     this.isFloat = false;
-                    this.isEqual = true;
                 }
 
                 // 연산자 입력 메소드
                 getOperator(op) {
+                    this.inputNum = '0';
+                    this.isEqual = false;
+                    this.isNum2 = true;
+                    if(this.number2 && !this.doubleOp) this.calculate();
                     this.operator = op;
-                    if(!this.nextIsNum){
-                        this.isEqual = false;
-                        this.setNumber();
-                        this.inputNum = '0';
-                    }else{
-                        this.inputNum = '0';
-                        this.isEqual = false;
-                        this.setNumber();
-                        this.nextIsNum = false;
-                    }
+                    this.doubleOp = true;
                 }
 
                 // '=' 입력 메소드
                 getEqual() {
-                    if(!this.number2 || this.number1){
-                        this.setNumber();
-                    }
-
-                    if(this.isEqual) this.calculate();
-                    this.nextIsNum = true;
+                    this.calculate();
+                    this.doubleOp = true;
+                    this.isNum2 = false;
+                    this.remover = false;
                 }
 
                 // 연산 메소드
@@ -113,27 +95,29 @@
                 }
 
                 mouseClear(event) {
-                    if(event.button == 2){   
-                        this.inputNum = this.inputNum.slice(0,this.inputNum.length -1);
-                        if(this.inputNum.length < 1) this.inputNum = '0';
-                        this.displayResult(this.inputNum);
-                    }
+                    if(event.button == 2) this.clear()
                 }
 
                 clear() {
-                    if(this.nextIsNum) {
-                        this.number1 = this.number1.toString().slice(0, this.number1.toString().length -1);
-                        if(this.number1.length < 1) this.number1 = '0';
-                        this.displayResult(this.number1);
-                    }else{
-                        this.inputNum = this.inputNum.slice(0, this.inputNum.length -1);
-                        if(this.inputNum.length < 1) this.inputNum = '0';                    
-                        else this.displayResult(this.inputNum);
+                    if(this.remover) {
+                        this.eraser(this.number2);
+                        this.number2 = Number(this.inputNum);
+                        this.doubleOp = true;
                     }
+                    else{
+                        this.eraser(this.number1);
+                        this.number1 = Number(this.inputNum);
+                    } 
+                }
+
+                eraser(num) {
+                    this.inputNum = num.toString().slice(0, num.toString().length -1);
+                    if(this.inputNum.toString().length < 1) this.displayResult('0');                    
+                    else this.displayResult(this.inputNum);
                 }
 
                 clearAll() {    
-                    this.isFloat = this.nextIsNum = false;
+                    this.isFloat = this.isNum2 = this.isEqual = this.doubleOp = this.remover = false;
                     this.operator = '';
                     this.inputNum = '0';
                     this.number1 = this.number2 = null;
@@ -142,8 +126,8 @@
 
                 checkDecimalPoint() {
                     if(!this.isFloat) {
-                        this.isFloat = true;
                         this.getNumber('.');
+                        this.isFloat = true;
                     } 
                 }
             }

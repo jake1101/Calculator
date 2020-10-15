@@ -18,7 +18,8 @@
                 // 출력 메소드
                 displayResult(num) {
                     if(num.toString().length >= 11) {
-                        num = num.toExponential(3);
+                        if(num.toString().charAt(1) != '.') num = num.toExponential(3);
+                        else num = num.toString().slice(0,11);
                     }
 
                     document.getElementById("display").innerHTML = num;
@@ -27,6 +28,9 @@
                 // 수의 저장공간 할당 메소드
                 setNumber() {
                     if(this.number1 || this.number1 == 0){
+                        if(this.operator == 'x' || this.operator == '/' || this.operator == '%') {
+                            this.inputNum = '1';
+                        }
                         this.number2 = Number(this.inputNum);
                         this.calculate();
                     } else {
@@ -56,6 +60,7 @@
 
                 // 연산자 입력 메소드
                 getOperator(op) {
+                    this.operator = op;
                     if(!this.flag){
                         this.setNumber();
                         this.inputNum = '0';
@@ -64,7 +69,6 @@
                         this.number2 = Number(this.inputNum);
                         this.flag = false;
                     }
-                    this.operator = op;
                 }
 
                 // '=' 입력 메소드
